@@ -5,11 +5,19 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>VortexSMP — Ranks</title>
   <style>
-    body{font-family:Arial,Helvetica,sans-serif;background:#071017;color:#e6eef8;margin:0}
+    :root{--bg:#071017;--card:#0f1318;--muted:#dbe9ff}
+    body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#e6eef8;margin:0}
     header{background:#0b1220;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
-    nav a{color:#dbe9ff;margin-left:12px;text-decoration:none;padding:6px 8px;border-radius:6px}
+    nav a{color:var(--muted);margin-left:12px;text-decoration:none;padding:6px 8px;border-radius:6px}
     main{padding:18px}
-    .card{background:#0f1318;padding:14px;border-radius:8px;border:1px solid rgba(255,255,255,0.03)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+    .rank-card{background:var(--card);padding:16px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:10px}
+    .rank-badge{padding:8px 12px;border-radius:8px;color:#041017;font-weight:800;display:inline-block}
+    .rank-name{font-weight:800;font-size:18px}
+    .rank-desc{color:rgba(255,255,255,0.7);font-size:13px}
+    .buy-row{display:flex;justify-content:space-between;align-items:center}
+    .btn{background:#ffd700;color:#041017;border:0;padding:8px 12px;border-radius:8px;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
   </style>
 </head>
 <body>
@@ -22,10 +30,63 @@
     </nav>
   </header>
   <main>
-    <div class="card">
-      <h1>Ranks</h1>
-      <p>Ranks page placeholder. You can expand this to display server ranks.</p>
+    <h1 style="margin-top:0">Ranks</h1>
+    <p class="small-muted">Choose a rank below and click Buy to purchase.</p>
+
+    <div class="grid" id="ranks-grid">
+      <div class="rank-card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="rank-name">aybss</div>
+            <div class="rank-desc">A sleek blue rank with exclusive chat color and tag.</div>
+          </div>
+          <div class="rank-badge" style="background:blue">BLUE</div>
+        </div>
+        <div class="buy-row">
+          <div style="color:var(--muted);font-size:13px">Price: $4.99</div>
+          <button class="btn" data-rank="aybss">Buy</button>
+        </div>
+      </div>
+
+      <div class="rank-card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="rank-name">ghoul</div>
+            <div class="rank-desc">A ghastly green rank with unique perks.</div>
+          </div>
+          <div class="rank-badge" style="background:green">GREEN</div>
+        </div>
+        <div class="buy-row">
+          <div style="color:var(--muted);font-size:13px">Price: $9.99</div>
+          <button class="btn" data-rank="ghoul">Buy</button>
+        </div>
+      </div>
+
+      <div class="rank-card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="rank-name">vortex</div>
+            <div class="rank-desc">The premium red rank — top-tier cosmetics & perks.</div>
+          </div>
+          <div class="rank-badge" style="background:red">RED</div>
+        </div>
+        <div class="buy-row">
+          <div style="color:var(--muted);font-size:13px">Price: $19.99</div>
+          <button class="btn" data-rank="vortex">Buy</button>
+        </div>
+      </div>
     </div>
   </main>
+
+  <script>
+    document.querySelectorAll('#ranks-grid .btn').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const rank = b.getAttribute('data-rank');
+        const subject = encodeURIComponent('Purchase%20'+rank);
+        const body = encodeURIComponent('I%20would%20like%20to%20purchase%20the%20'+rank+'%20rank.%20IGN:%20');
+        window.location.href = `mailto:store@vortexsmp.com?subject=${subject}&body=${body}`;
+      });
+    });
+  </script>
 </body>
 </html>
