@@ -87,6 +87,43 @@
         </div>
       </div>
     </div>
+    
+    <div style="margin-top:18px">
+      <div class="panel">
+        <h3 style="margin:0 0 8px">Server IPs</h3>
+        <p class="muted small" style="margin:0 0 12px;color:var(--muted)">Copy the server address for your platform.</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="flex:1;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px">Eaglercraft (Bedrock): <strong id="eagler-ip">wss://play.vortex-smp.net</strong></div>
+            <button class="btn ghost" data-copy="wss://play.vortex-smp.net">Copy</button>
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="flex:1;background:rgba(255,255,255,0.02);padding:8px;border-radius:8px">Java: <strong id="java-ip">play.vortex-smp.net</strong></div>
+            <button class="btn ghost" data-copy="play.vortex-smp.net">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+  <script>
+    // copy-to-clipboard for server IPs
+    document.querySelectorAll('button[data-copy]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const txt = btn.getAttribute('data-copy');
+        try{
+          await navigator.clipboard.writeText(txt);
+          const orig = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(()=> btn.textContent = orig, 1500);
+        }catch(e){
+          // fallback: select text in a temporary input
+          const inp = document.createElement('input'); inp.value = txt; document.body.appendChild(inp); inp.select();
+          try{ document.execCommand('copy'); alert('Copied: ' + txt); }catch(err){ prompt('Copy this address', txt); }
+          inp.remove();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
