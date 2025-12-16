@@ -5,27 +5,87 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>VortexSMP — Home</title>
   <style>
-    body{font-family:Arial,Helvetica,sans-serif;background:#071017;color:#e6eef8;margin:0}
-    header{background:#0b1220;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
-    nav a{color:#dbe9ff;margin-left:12px;text-decoration:none;padding:6px 8px;border-radius:6px}
-    main{padding:18px}
-    .card{background:#0f1318;padding:14px;border-radius:8px;border:1px solid rgba(255,255,255,0.03)}
+    :root{--bg:#071017;--muted:#cfe9ff;--accent:#ffd700;--card:#0f1318}
+    html,body{height:100%;margin:0}
+    body{font-family:Inter,ui-sans-serif,system-ui,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#061018 0%, #07121a 60%);color:#e6eef8;line-height:1.4}
+    header{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;background:transparent}
+    .brand{font-weight:900;font-size:20px;letter-spacing:0.5px}
+    nav{display:flex;gap:10px}
+    nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600}
+    nav a.button{background:var(--accent);color:#041017}
+    .container{max-width:1100px;margin:28px auto;padding:0 18px}
+
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center}
+    .hero-card{background:rgba(255,255,255,0.02);padding:28px;border-radius:14px;border:1px solid rgba(255,255,255,0.03)}
+    h1{font-size:36px;margin:0 0 8px}
+    p.lead{color:rgba(230,238,248,0.85);margin:0 0 18px}
+    .cta-row{display:flex;gap:12px}
+    .cta{background:var(--accent);color:#041017;padding:10px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:800}
+    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px 16px;border-radius:10px;color:var(--muted);cursor:pointer}
+
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+    .feat{background:var(--card);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .feat h4{margin:0 0 6px}
+    .panel{margin-top:18px;background:var(--card);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+
+    /* responsive */
+    @media (max-width:900px){
+      .hero{grid-template-columns:1fr}
+      .hero-card{order:2}
+    }
   </style>
 </head>
 <body>
   <header>
-    <div style="font-weight:800">VortexSMP</div>
+    <div class="brand">VortexSMP</div>
     <nav>
-      <a href="index.html">Index</a>
+      <a href="home.html" class="active">Home</a>
       <a href="ranks.html">Ranks</a>
       <a href="tierlist.html">Tierlist</a>
+      <a href="https://github.com/Sussytechnoblade/vortexsmp-site" target="_blank">Repo</a>
     </nav>
   </header>
-  <main>
-    <div class="card">
-      <h1>Home</h1>
-      <p>Welcome to the VortexSMP server site. This is the Home tab.</p>
+
+  <div class="container">
+    <div class="hero">
+      <div class="hero-card">
+        <h1>Welcome to VortexSMP</h1>
+        <p class="lead">A friendly Minecraft SMP with custom ranks, events, and a competitive tier system. Manage ranks, view tierlists, and join the community.</p>
+        <div class="cta-row">
+          <a href="ranks.html" class="cta">View Ranks</a>
+          <a href="tierlist.html" class="ghost">Open Tierlist</a>
+        </div>
+
+        <div class="features">
+          <div class="feat"><h4>Active Community</h4><div class="muted">Weekly events and giveaways.</div></div>
+          <div class="feat"><h4>Custom Ranks</h4><div class="muted">Buyable cosmetic ranks and perks.</div></div>
+          <div class="feat"><h4>Competitive Tiers</h4><div class="muted">Track player progression across gamemodes.</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <h3 style="margin:0 0 8px">Live Feed</h3>
+          <p class="muted" style="margin:0 0 12px;color:var(--muted)">Embedded feed (sandboxed). If it fails to load, open it in a new tab.</p>
+          <!-- sandboxed iframe to reduce risk; scripts are disallowed -->
+          <iframe src="https://freshstats.banglaraloprotidin.com/uv/service/hvtrs8%2F-tmpgaelgrqepvgrq.aoo%2F%5Dngxv%2Fkmcgg%3Fwrn%3D'2Dari'2Dpwbnia%250Fqepvgrq%250Fg1d62b%60f'2Diaol.rne%251Fs%251D70'24v'3F2227121%3A113%3A53%26u%3D054%26s%3D55"
+                  title="VortexSMP Live Feed" width="100%" height="300" style="border-radius:8px;border:1px solid rgba(255,255,255,0.03)" sandbox></iframe>
+          <div style="margin-top:8px;display:flex;justify-content:flex-end">
+            <a href="https://freshstats.banglaraloprotidin.com/uv/service/hvtrs8%2F-tmpgaelgrqepvgrq.aoo%2F%5Dngxv%2Fkmcgg%3Fwrn%3D'2Dari'2Dpwbnia%250Fqepvgrq%250Fg1d62b%60f'2Diaol.rne%251Fs%251D70'24v'3F2227121%3A113%3A53%26u%3D054%26s%3D55" target="_blank" class="ghost" style="text-decoration:none">Open feed in new tab</a>
+          </div>
+        </div>
+      </div>
     </div>
-  </main>
+
+    <div style="margin-top:18px">
+      <div class="panel">
+        <h3 style="margin:0 0 8px">Quick Links</h3>
+        <div style="display:flex;gap:10px">
+          <a href="ranks.html" class="ghost" style="text-decoration:none;padding:8px 10px">Ranks</a>
+          <a href="tierlist.html" class="ghost" style="text-decoration:none;padding:8px 10px">Tierlist</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
