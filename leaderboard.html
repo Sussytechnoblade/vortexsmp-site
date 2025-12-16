@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VortexSMP — Leaderboard</title>
+  <style>
+    :root{--bg:#8B0000;--card:#2b0000;--muted:#ffecec}
+    body{font-family:Inter,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#b30000 0%, #8B0000 60%);color:#fff;margin:0}
+    header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px}
+    nav a{color:#fff;text-decoration:none;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.04);margin-left:8px;font-weight:700}
+    .container{max-width:1000px;margin:20px auto;padding:0 18px}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{padding:8px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .muted{color:var(--muted)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    input[type="text"], input[type="number"]{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff}
+    .btn{background:#ffd700;color:#041017;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:#fff}
+    .small{font-size:13px}
+  </style>
+</head>
+<body>
+  <header>
+    <div style="font-weight:800">VortexSMP</div>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="ranks.html">Ranks</a>
+      <a href="tierlist.html">Tierlist</a>
+      <a href="leaderboard.html">Leaderboard</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="panel">
+      <h2 style="margin:0">Leaderboard — Kills & Deaths</h2>
+      <p class="muted small">Track and edit player stats locally (saved to this browser's storage).</p>
+
+      <div class="controls">
+        <input id="new-ign" type="text" placeholder="Player IGN" />
+        <input id="new-kills" type="number" placeholder="Kills" min="0" value="0" />
+        <input id="new-deaths" type="number" placeholder="Deaths" min="0" value="0" />
+        <button id="add-player" class="btn">Add Player</button>
+        <button id="clear-all" class="btn ghost">Clear All</button>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button id="sort-kills" class="btn ghost">Sort: Kills</button>
+          <button id="sort-deaths" class="btn ghost">Sort: Deaths</button>
+        </div>
+      </div>
+
+      <table id="lb-table">
+        <thead>
+          <tr><th>#</th><th>IGN</th><th>Kills</th><th>Deaths</th><th>K/D</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'vortex_leaderboard_v1';
+    let players = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    let sortBy = 'kills';
+
+    const tbody = document.querySelector('#lb-table tbody');
+    const newIgn = document.getElementById('new-ign');
+    const newKills = document.getElementById('new-kills');
+    const newDeaths = document.getElementById('new-deaths');
+
+    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(players)); }
+
+    function render(){
+      tbody.innerHTML='';
+      const arr = Object.keys(players).map(ign=>({ign,...players[ign]}));
+      arr.sort((a,b)=> (b[sortBy]||0) - (a[sortBy]||0) || a.ign.localeCompare(b.ign));
+      arr.forEach((p,i)=>{
+        const tr = document.createElement('tr');
+        const kd = p.deaths? (p.kills / p.deaths).toFixed(2) : (p.kills? p.kills+'.00' : '0.00');
+        tr.innerHTML = `<td>${i+1}</td><td>${p.ign}</td><td>${p.kills}</td><td>${p.deaths}</td><td>${kd}</td>
+          <td>
+            <button class="btn ghost" data-act="inck" data-ign="${p.ign}">+K</button>
+            <button class="btn ghost" data-act="incd" data-ign="${p.ign}">+D</button>
+            <button class="btn ghost" data-act="edit" data-ign="${p.ign}">Edit</button>
+            <button class="btn ghost" data-act="remove" data-ign="${p.ign}">Remove</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function addPlayer(ign,kills,deaths){
+      if(!ign) return alert('Enter IGN');
+      players[ign] = { kills: Number(kills)||0, deaths: Number(deaths)||0 };
+      save(); render();
+    }
+
+    document.getElementById('add-player').onclick = ()=>{
+      addPlayer(newIgn.value.trim(), newKills.value, newDeaths.value);
+      newIgn.value=''; newKills.value=0; newDeaths.value=0;
+    };
+
+    document.getElementById('clear-all').onclick = ()=>{
+      if(!confirm('Clear all players?')) return;
+      players = {}; save(); render();
+    };
+
+    document.getElementById('sort-kills').onclick = ()=>{ sortBy='kills'; render(); };
+    document.getElementById('sort-deaths').onclick = ()=>{ sortBy='deaths'; render(); };
+
+    tbody.addEventListener('click', (e)=>{
+      const b = e.target.closest('button'); if(!b) return;
+      const act = b.getAttribute('data-act'); const ign = b.getAttribute('data-ign');
+      if(act==='inck'){ players[ign].kills = (players[ign].kills||0)+1; save(); render(); }
+      if(act==='incd'){ players[ign].deaths = (players[ign].deaths||0)+1; save(); render(); }
+      if(act==='remove'){ if(confirm('Remove '+ign+'?')){ delete players[ign]; save(); render(); } }
+      if(act==='edit'){
+        const k = prompt('Kills for '+ign, players[ign].kills||0); if(k===null) return;
+        const d = prompt('Deaths for '+ign, players[ign].deaths||0); if(d===null) return;
+        players[ign].kills = Number(k)||0; players[ign].deaths = Number(d)||0; save(); render();
+      }
+    });
+
+    // seed small demo if empty
+    if(Object.keys(players).length===0){ players['Sussytech'] = {kills:12,deaths:3}; players['WhitebutterYT']={kills:8,deaths:5}; save(); }
+    render();
+  </script>
+</body>
+</html>
